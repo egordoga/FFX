@@ -40,8 +40,8 @@ public class MyFile {
 
         for (File f : files) {
             if (f.isDirectory()) {
-                listDir.add(new MyFile(f.getName(), f.lastModified(), f.length()));
-            } else listFile.add(new MyFile(f.getName(), f.lastModified(), f.length()));
+                listDir.add(new MyFile(f.getName(), f.lastModified(), f.length()/1024));
+            } else listFile.add(new MyFile(f.getName(), f.lastModified(), f.length()/1024));
         }
         list.addAll(listDir);
         list.addAll(listFile);

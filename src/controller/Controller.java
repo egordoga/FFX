@@ -25,6 +25,8 @@ public class Controller {
     @FXML
     private void initialize(){
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, String>("name"));
+        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
+        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
         tableFile.setItems(list);
     }
 }
