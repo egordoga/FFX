@@ -9,11 +9,13 @@ public class MyFile {
     private String name;
     private long dateModif;
     private long size;
+    public File fi;
 
-    public MyFile(String name, long dateModif, long size) {
+    public MyFile(String name, long dateModif, long size, File fi) {
         this.name = name;
         this.dateModif = dateModif;
         this.size = size;
+        this.fi = fi;
     }
 
     public MyFile() {
@@ -40,8 +42,8 @@ public class MyFile {
 
         for (File f : files) {
             if (f.isDirectory()) {
-                listDir.add(new MyFile(f.getName(), f.lastModified(), f.length()/1024));
-            } else listFile.add(new MyFile(f.getName(), f.lastModified(), f.length()/1024));
+                listDir.add(new MyFile(f.getName(), f.lastModified(), f.length()/1024, f));
+            } else listFile.add(new MyFile(f.getName(), f.lastModified(), f.length()/1024, f));
         }
         list.addAll(listDir);
         list.addAll(listFile);
