@@ -72,7 +72,8 @@ public class Controller {
                 setGraphic(null);
                 setText(null);
             } else {
-                Image fxImage = getFileIcon(item);
+                //Image fxImage = getFileIcon(item);
+                Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(myF.fi));
                 ImageView imageView = new ImageView(fxImage);
                 setGraphic(imageView);
                 setText(item);
