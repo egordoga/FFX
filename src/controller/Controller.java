@@ -9,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Callback;
 import model.MyFile;
-//import other.ListViewCellFactory2;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.image.BufferedImage;
@@ -30,10 +29,42 @@ public class Controller {
 
 
     MyFile myFile = new MyFile();
-    ObservableList list = myFile.initFileList("F:\\Python\\Java");
+    ObservableList list = myFile.initFileList("D:\\");
+
+    @FXML
+    private void initialize(){
+        colName.setCellValueFactory(new PropertyValueFactory<MyFile, String>("name"));
+        colName.setCellFactory(new Callback<TableColumn<MyFile, String>, javafx.scene.control.TableCell<MyFile, String>>() {
+            @Override
+            public TableCell<MyFile, String> call(TableColumn<MyFile, String> param) {
+                return new AttachmentListCell();
+            }
+
+           /* @Override
+            public ListCell<String> call(ListView<String> list) {
+                return new AttachmentListCell();
+            }*/
+        });
+
+        //colName.graphicProperty().setValue(new ImageView(jswingIconToImage(getJSwingIconFromFileSystem(myFile.fi))));
+
+        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
+        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
+        tableFile.setItems(list);
+    }
 
 
-   /* public static class AttachmentListCell extends TableCell<MyFile, String> {
+    /* list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        @Override
+        public ListCell<String> call(ListView<String> list) {
+            return new ListViewCellFactory2.AttachmentListCell();
+        }
+    });*/
+
+
+    public static class AttachmentListCell extends TableCell<MyFile, String> {
+
+        MyFile myF = new MyFile();
         @Override
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
@@ -50,6 +81,21 @@ public class Controller {
     }
 
 
+    private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
+        BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
+                BufferedImage.TYPE_INT_ARGB);
+        jswingIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
+        return SwingFXUtils.toFXImage(bufferedImage, null);
+    }
+
+    private static javax.swing.Icon getJSwingIconFromFileSystem(File file) {
+
+        FileSystemView view = FileSystemView.getFileSystemView();
+        javax.swing.Icon icon = view.getSystemIcon(file);
+
+        return icon;
+    }
+
     static HashMap<String, Image> mapOfFileExtToSmallIcon = new HashMap<String, Image>();
 
     private static String getFileExt(String fname) {
@@ -61,20 +107,6 @@ public class Controller {
         return ext.toLowerCase();
     }
 
-    private static javax.swing.Icon getJSwingIconFromFileSystem(File file) {
-
-        // Windows {
-        FileSystemView view = FileSystemView.getFileSystemView();
-        javax.swing.Icon icon = view.getSystemIcon(file);
-        // }
-
-        // OS X {
-        //final javax.swing.JFileChooser fc = new javax.swing.JFileChooser();
-        //javax.swing.Icon icon = fc.getUI().getFileView(fc).getIcon(file);
-        // }
-
-        return icon;
-    }
 
     public static Image getFileIcon(String fname) {
         final String ext = getFileExt(fname);
@@ -109,50 +141,5 @@ public class Controller {
         }
 
         return fileIcon;
-    }*/
-
-    private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
-        BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-        jswingIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
-        return SwingFXUtils.toFXImage(bufferedImage, null);
     }
-
-
-
-    @FXML
-    private void initialize(){
-
-       /* colName.setCellFactory(new Callback<TableColumn<MyFile, String>, TableCell<MyFile, String>>() {
-
-
-            @Override
-            public TableCell<MyFile, String> call(TableColumn<MyFile, String> param) {
-                return new AttachmentListCell();
-            }*/
-
-           /* @Override
-            public ListCell<String> call(ListView<String> list) {
-                return new ListViewCellFactory2.AttachmentListCell();
-            }*/
-      //  });
-
-        colName.setCellValueFactory(new PropertyValueFactory<MyFile, String>("name"));
-
-        FileSystemView view = FileSystemView.getFileSystemView();
-        javax.swing.Icon icon = view.getSystemIcon(myFile.fi);
-
-        colName.graphicProperty().setValue(new ImageView(jswingIconToImage(icon)));
-        //label1.setGraphic(new ImageView(jswingIconToImage(icon)));
-
-
-
-        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
-        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile.setItems(list);
-    }
-
-
-
-
 }

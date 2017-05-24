@@ -21,9 +21,9 @@ import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 
-//public class ListViewCellFactory2 extends Application {
+public class ListViewCellFactory2 extends Application {
 
-   /* ListView<String> list = new ListView<String>();
+    ListView<String> list = new ListView<String>();
     ObservableList<String> data = FXCollections.observableArrayList(
             "a.msg", "a1.msg", "b.txt", "c.pdf",
             "d.html", "e.png", "f.zip",
@@ -40,17 +40,17 @@ import javax.swing.filechooser.FileSystemView;
 
         list.setItems(data);
 
-        list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+       /* list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
             @Override
             public ListCell<String> call(ListView<String> list) {
                 return new AttachmentListCell();
             }
-        });
+        });*/
 
         stage.show();
     }
 
-    public static class AttachmentListCell extends ListCell<String> {
+   /* public static class AttachmentListCell extends ListCell<String> {
         @Override
         public void updateItem(String item, boolean empty) {
             super.updateItem(item, empty);
@@ -64,7 +64,7 @@ import javax.swing.filechooser.FileSystemView;
                 setText(item);
             }
         }
-    }
+    }*/
 
     public static void main(String[] args) {
         launch(args);
@@ -97,7 +97,7 @@ import javax.swing.filechooser.FileSystemView;
         return icon;
     }
 
-    public static Image getFileIcon(String fname) {
+  /*  public static Image getFileIcon(String fname) {
         final String ext = getFileExt(fname);
 
         Image fileIcon = mapOfFileExtToSmallIcon.get(ext);
@@ -130,7 +130,7 @@ import javax.swing.filechooser.FileSystemView;
         }
 
         return fileIcon;
-    }
+    }*/
 
     private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
         BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
@@ -138,5 +138,4 @@ import javax.swing.filechooser.FileSystemView;
         jswingIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
         return SwingFXUtils.toFXImage(bufferedImage, null);
     }
-*/
-//}
+}
