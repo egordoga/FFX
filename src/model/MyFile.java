@@ -11,13 +11,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class MyFile {
-    private NamePlusImg namePlusImg;
+    //private NamePlusImg namePlusImg;
     private long dateModif;
     private long size;
     public File fi;
 
     public MyFile(NamePlusImg name, long dateModif, long size, File fi) {
-        this.namePlusImg = name;
+        //this.namePlusImg = name;
         this.dateModif = dateModif;
         this.size = size;
         this.fi = fi;
@@ -28,6 +28,10 @@ public class MyFile {
 
     public NamePlusImg getNamePlusImg(File f) {
         return new NamePlusImg(f.getName(), jswingIconToImage(getJSwingIconFromFileSystem(f)));
+    }
+
+    public File getFi() {
+        return fi;
     }
 
     public long getDateModif() {

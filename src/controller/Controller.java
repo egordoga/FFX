@@ -21,7 +21,7 @@ public class Controller {
     @FXML
     TableView<MyFile> tableFile;
     @FXML
-    TableColumn<MyFile, NamePlusImg> colName;
+    TableColumn<MyFile, File> colName;
     @FXML
     TableColumn<MyFile, String> colDateModif;
     @FXML
@@ -29,12 +29,12 @@ public class Controller {
 
 
     MyFile myFile = new MyFile();
-    ObservableList list = myFile.initFileList("f:\\");
+    ObservableList list = myFile.initFileList("d:\\");
 
     @FXML
     private void initialize(){
         //NamePlusImg namePlusImg = new NamePlusImg(myFile.getNamePlusImg(), jswingIconToImage(getJSwingIconFromFileSystem(myFile.fi)));
-        colName.setCellValueFactory(new PropertyValueFactory<MyFile, NamePlusImg>("name"));
+        colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         /* @Override
          public ListCell<String> call(ListView<String> list) {
              return new AttachmentListCell();
@@ -57,22 +57,22 @@ public class Controller {
     });*/
 
 
-    public static class AttachmentListCell extends TableCell<MyFile, NamePlusImg> {
+    public static class AttachmentListCell extends TableCell<MyFile, File> {
 
         MyFile myF = new MyFile();
         @Override
-        public void updateItem(NamePlusImg item, boolean empty) {
+        public void updateItem(File item, boolean empty) {
             super.updateItem((item), empty);
             if (empty) {
                 setGraphic(null);
                 setText(null);
             } else {
                 //Image fxImage = getFileIcon(item);
-                Image fxImage = item.imageFile;
-                //Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(item.fi));
+                //Image fxImage = item.imageFile;
+                Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(item));
                 ImageView imageView = new ImageView(fxImage);
                 setGraphic(imageView);
-                setText(item.nameFile);
+                setText(item.getName());
             }
         }
     }

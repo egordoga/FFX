@@ -13,4 +13,12 @@ public class NamePlusImg {
         this.nameFile = nameFile;
         this.imageFile = imageFile;
     }
+
+    public String getNameFile() {
+        return nameFile;
+    }
+
+    public Image getImageFile() {
+        return imageFile;
+    }
 }
