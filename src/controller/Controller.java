@@ -94,7 +94,6 @@ public class Controller {
     }
 
    /* static HashMap<String, Image> mapOfFileExtToSmallIcon = new HashMap<String, Image>();
-
     private static String getFileExt(String fname) {
         String ext = ".";
         int p = fname.lastIndexOf('.');
@@ -103,16 +102,11 @@ public class Controller {
         }
         return ext.toLowerCase();
     }
-
-
     public static Image getFileIcon(String fname) {
         final String ext = getFileExt(fname);
-
         Image fileIcon = mapOfFileExtToSmallIcon.get(ext);
         if (fileIcon == null) {
-
             javax.swing.Icon jswingIcon = null;
-
             File file = new File(fname);
             if (file.exists()) {
                 jswingIcon = getJSwingIconFromFileSystem(file);
@@ -130,13 +124,11 @@ public class Controller {
                     if (tempFile != null) tempFile.delete();
                 }
             }
-
             if (jswingIcon != null) {
                 fileIcon = jswingIconToImage(jswingIcon);
                 mapOfFileExtToSmallIcon.put(ext, fileIcon);
             }
         }
-
         return fileIcon;
     }*/
 }
