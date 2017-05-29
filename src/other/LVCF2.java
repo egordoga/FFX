@@ -21,22 +21,22 @@ import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 
-public class ListViewCellFactory2 extends Application {
+public class LVCF2 extends Application {
 
-    ListView<String> list = new ListView<String>();
+    ListView<File> list = new ListView<File>();
     ObservableList<String> data1 = FXCollections.observableArrayList(
             "a.msg", "a1.msg", "b.txt", "c.pdf",
             "d.html", "e.png", "f.zip",
             "g.docx", "h.xlsx", "i.pptx");
 
-    ObservableList<String> data = initData();
+    ObservableList<File> data = initData();
 
-    ObservableList<String> initData(){
+    ObservableList<File> initData(){
         File file = new File("f:\\");
-        ObservableList<String> d = FXCollections.observableArrayList();
+        ObservableList<File> d = FXCollections.observableArrayList();
         File[] files = file.listFiles();
         for (File f : files) {
-            d.add(f.getName());
+            if (f.isFile() || f.isDirectory()) d.add(f);
         }
         return d;
     }
@@ -52,9 +52,10 @@ public class ListViewCellFactory2 extends Application {
 
         list.setItems(data);
 
-        list.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+        list.setCellFactory(new Callback<ListView<File>, ListCell<File>>() {
+
             @Override
-            public ListCell<String> call(ListView<String> list) {
+            public ListCell<File> call(ListView<File> list) {
                 return new AttachmentListCell();
             }
         });
@@ -62,18 +63,18 @@ public class ListViewCellFactory2 extends Application {
         stage.show();
     }
 
-    public static class AttachmentListCell extends ListCell<String> {
+    public static class AttachmentListCell extends ListCell<File> {
         @Override
-        public void updateItem(String item, boolean empty) {
+        public void updateItem(File item, boolean empty) {
             super.updateItem(item, empty);
             if (empty) {
                 setGraphic(null);
                 setText(null);
             } else {
-                Image fxImage = getFileIcon(item);
+                Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(item));
                 ImageView imageView = new ImageView(fxImage);
                 setGraphic(imageView);
-                setText(item);
+                setText(item.getName());
             }
         }
     }

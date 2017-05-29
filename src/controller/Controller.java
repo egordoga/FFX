@@ -21,7 +21,7 @@ public class Controller {
     @FXML
     TableView<MyFile> tableFile;
     @FXML
-    TableColumn<MyFile, String> colName;
+    TableColumn<MyFile, NamePlusImg> colName;
     @FXML
     TableColumn<MyFile, String> colDateModif;
     @FXML
@@ -29,22 +29,17 @@ public class Controller {
 
 
     MyFile myFile = new MyFile();
-    ObservableList list = myFile.initFileList("D:\\");
+    ObservableList list = myFile.initFileList("f:\\");
 
     @FXML
     private void initialize(){
-        colName.setCellValueFactory(new PropertyValueFactory<MyFile, String>("name"));
-        colName.setCellFactory(new Callback<TableColumn<MyFile, String>, javafx.scene.control.TableCell<MyFile, String>>() {
-            @Override
-            public TableCell<MyFile, String> call(TableColumn<MyFile, String> param) {
-                return new AttachmentListCell();
-            }
-
-           /* @Override
-            public ListCell<String> call(ListView<String> list) {
-                return new AttachmentListCell();
-            }*/
-        });
+        //NamePlusImg namePlusImg = new NamePlusImg(myFile.getNamePlusImg(), jswingIconToImage(getJSwingIconFromFileSystem(myFile.fi)));
+        colName.setCellValueFactory(new PropertyValueFactory<MyFile, NamePlusImg>("name"));
+        /* @Override
+         public ListCell<String> call(ListView<String> list) {
+             return new AttachmentListCell();
+         }*/
+        colName.setCellFactory(param -> new AttachmentListCell());
 
         //colName.graphicProperty().setValue(new ImageView(jswingIconToImage(getJSwingIconFromFileSystem(myFile.fi))));
 
@@ -62,21 +57,22 @@ public class Controller {
     });*/
 
 
-    public static class AttachmentListCell extends TableCell<MyFile, String> {
+    public static class AttachmentListCell extends TableCell<MyFile, NamePlusImg> {
 
         MyFile myF = new MyFile();
         @Override
-        public void updateItem(String item, boolean empty) {
-            super.updateItem(item, empty);
+        public void updateItem(NamePlusImg item, boolean empty) {
+            super.updateItem((item), empty);
             if (empty) {
                 setGraphic(null);
                 setText(null);
             } else {
                 //Image fxImage = getFileIcon(item);
-                Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(myF.fi));
+                Image fxImage = item.imageFile;
+                //Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(item.fi));
                 ImageView imageView = new ImageView(fxImage);
                 setGraphic(imageView);
-                setText(item);
+                setText(item.nameFile);
             }
         }
     }
@@ -97,7 +93,7 @@ public class Controller {
         return icon;
     }
 
-    static HashMap<String, Image> mapOfFileExtToSmallIcon = new HashMap<String, Image>();
+   /* static HashMap<String, Image> mapOfFileExtToSmallIcon = new HashMap<String, Image>();
 
     private static String getFileExt(String fname) {
         String ext = ".";
@@ -142,5 +138,5 @@ public class Controller {
         }
 
         return fileIcon;
-    }
+    }*/
 }
