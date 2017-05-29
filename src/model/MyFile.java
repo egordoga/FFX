@@ -1,23 +1,20 @@
 package model;
 
-import controller.NamePlusImg;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-
 import javax.swing.filechooser.FileSystemView;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.SimpleDateFormat;
 
 public class MyFile {
-    //private NamePlusImg namePlusImg;
-    private long dateModif;
-    private long size;
+    private String dateModif;
+    private String size;
     public File fi;
 
-    public MyFile(NamePlusImg name, long dateModif, long size, File fi) {
-        //this.namePlusImg = name;
+    public MyFile( String dateModif, String size, File fi) {
         this.dateModif = dateModif;
         this.size = size;
         this.fi = fi;
@@ -26,42 +23,42 @@ public class MyFile {
     public MyFile() {
     }
 
-    public NamePlusImg getNamePlusImg(File f) {
-        return new NamePlusImg(f.getName(), jswingIconToImage(getJSwingIconFromFileSystem(f)));
-    }
+    public ObservableList<MyFile> listFile = FXCollections.observableArrayList();
+    public ObservableList<MyFile> listDir = FXCollections.observableArrayList();
+
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
 
     public File getFi() {
         return fi;
     }
 
-    public long getDateModif() {
+    public String getDateModif() {
         return dateModif;
     }
 
-    public long getSize() {
+    public String getSize() {
         return size;
     }
 
-    public ObservableList<MyFile> initFileList(String path){
+    public void initFileListWithoutHidden(String path){
         File file = new File(path);
         File[] files = file.listFiles();
-        ObservableList<MyFile> list = FXCollections.observableArrayList();
-        ObservableList<MyFile> listFile = FXCollections.observableArrayList();
-        ObservableList<MyFile> listDir = FXCollections.observableArrayList();
 
         for (File f : files) {
-            if (f.isFile() || f.isDirectory()) {
-                list.add(new MyFile(getNamePlusImg(f), f.lastModified(), f.length()/1024, f));
-            /*} else listFile.add(new MyFile(new NamePlusImg(f.getName(), jswingIconToImage(getJSwingIconFromFileSystem(f))), f.lastModified(), f.length()/1024, f));*/
-        }}
+            if (f.isFile() && !f.isHidden()) {
+                listFile.add(new MyFile( sdf.format(f.lastModified()), f.length()/1024 + " Кб", f));
+            } else if(f.isDirectory() && !f.isHidden()){
+                listDir.add(new MyFile(sdf.format(f.lastModified()), "", f));
+            }
+        }
         //list.addAll(listDir);
         //list.addAll(listFile);
 
-        return list;
+
     }
 
 
-    private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
+    /*private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
         BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
                 BufferedImage.TYPE_INT_ARGB);
         jswingIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
@@ -74,5 +71,5 @@ public class MyFile {
         javax.swing.Icon icon = view.getSystemIcon(file);
 
         return icon;
-    }
+    }*/
 }

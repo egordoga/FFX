@@ -73,7 +73,7 @@ public class LVCF2 extends Application {
             } else {
                 Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(item));
                 ImageView imageView = new ImageView(fxImage);
-                setGraphic(imageView);
+                //setGraphic(imageView);
                 setText(item.getName());
             }
         }
@@ -84,7 +84,7 @@ public class LVCF2 extends Application {
     }
 
 
-    static HashMap<String, Image> mapOfFileExtToSmallIcon = new HashMap<String, Image>();
+
 
     private static String getFileExt(String fname) {
         String ext = ".";
@@ -110,40 +110,7 @@ public class LVCF2 extends Application {
         return icon;
     }
 
-    public static Image getFileIcon(String fname) {
-        final String ext = getFileExt(fname);
 
-        Image fileIcon = mapOfFileExtToSmallIcon.get(ext);
-        if (fileIcon == null) {
-
-            javax.swing.Icon jswingIcon = null;
-
-            File file = new File(fname);
-            if (file.exists()) {
-                jswingIcon = getJSwingIconFromFileSystem(file);
-            }
-            else {
-                File tempFile = null;
-                try {
-                    tempFile = File.createTempFile("icon", ext);
-                    jswingIcon = getJSwingIconFromFileSystem(tempFile);
-                }
-                catch (IOException ignored) {
-                    // Cannot create temporary file.
-                }
-                finally {
-                    if (tempFile != null) tempFile.delete();
-                }
-            }
-
-            if (jswingIcon != null) {
-                fileIcon = jswingIconToImage(jswingIcon);
-                mapOfFileExtToSmallIcon.put(ext, fileIcon);
-            }
-        }
-
-        return fileIcon;
-    }
 
     private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
         BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
