@@ -2,6 +2,7 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javax.swing.filechooser.FileSystemView;
@@ -25,6 +26,7 @@ public class MyFile {
 
     public ObservableList<MyFile> listFile = FXCollections.observableArrayList();
     public ObservableList<MyFile> listDir = FXCollections.observableArrayList();
+    //public SortedList<MyFile> sortedList = new SortedList<>(getList("d:\\");
 
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yy HH:mm");
 
@@ -55,6 +57,14 @@ public class MyFile {
         //list.addAll(listFile);
 
 
+    }
+
+    public ObservableList<MyFile> getList(String path){
+        ObservableList<MyFile> list = FXCollections.observableArrayList();
+        initFileListWithoutHidden(path);
+        list.addAll(listDir);
+        list.addAll(listFile);
+        return list;
     }
 
 

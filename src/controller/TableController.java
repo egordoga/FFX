@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 
-public class Controller {
+public class TableController extends TableView{
 
     @FXML
     TableView<MyFile> tableFile;
@@ -26,7 +26,7 @@ public class Controller {
     TableColumn<MyFile, String> colSize;
 
 
-    MyFile myFile = new MyFile();
+    private MyFile myFile = new MyFile();
 
     @FXML
     private void initialize(){
@@ -36,10 +36,9 @@ public class Controller {
         colName.setCellFactory(param -> new AttachmentListCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        //tableFile.setItems(myFile.listFile);
         tableFile.setItems(myFile.listDir);
+        tableFile.getItems().addAll(myFile.listFile);
     }
-
 
 
     public static class AttachmentListCell extends TableCell<MyFile, File> {
@@ -59,19 +58,21 @@ public class Controller {
     }
 
 
-    private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
+    public static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
         BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
                 BufferedImage.TYPE_INT_ARGB);
         jswingIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
         return SwingFXUtils.toFXImage(bufferedImage, null);
     }
 
-    private static javax.swing.Icon getJSwingIconFromFileSystem(File file) {
+    public static javax.swing.Icon getJSwingIconFromFileSystem(File file) {
 
         FileSystemView view = FileSystemView.getFileSystemView();
         javax.swing.Icon icon = view.getSystemIcon(file);
 
         return icon;
     }
+
+
 
 }
