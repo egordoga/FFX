@@ -38,10 +38,5 @@ public class TreeController extends TreeView {
         }
     }
 
-    @FXML
-    private void initialize() {
-        paneTree = new TreeView<File>(
-                new SimpleFileTreeItem(new File("C:\\")));
-        paneTree.setCellFactory(param -> new AttachmentListCell());
-    }
+
 }

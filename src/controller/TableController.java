@@ -7,7 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import model.MyFile;
+import sample.SimpleFileTreeItem;
 
 import javax.swing.filechooser.FileSystemView;
 import java.awt.image.BufferedImage;
@@ -24,6 +26,10 @@ public class TableController extends TableView{
     TableColumn<MyFile, String> colDateModif;
     @FXML
     TableColumn<MyFile, String> colSize;
+    @FXML
+    TreeView<File> paneTree;
+    @FXML
+    AnchorPane anchorTree;
 
 
     private MyFile myFile = new MyFile();
@@ -38,6 +44,11 @@ public class TableController extends TableView{
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
         tableFile.setItems(myFile.listDir);
         tableFile.getItems().addAll(myFile.listFile);
+
+        paneTree = new TreeView<File>(
+                new SimpleFileTreeItem(new File("C:\\")));
+        paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
+        anchorTree.getChildren().add(paneTree);
     }
 
 
