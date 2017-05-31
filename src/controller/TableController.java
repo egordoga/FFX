@@ -36,6 +36,20 @@ public class TableController extends TableView{
 
     @FXML
     private void initialize(){
+        initializeTable();
+
+        initializeTree();
+    }
+
+    private void initializeTree() {
+        File file = new File("C:\\");
+        paneTree = new TreeView<File>(
+                new SimpleFileTreeItem(file));
+        paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
+        anchorTree.getChildren().add(paneTree);
+    }
+
+    private void initializeTable() {
         myFile.initFileListWithoutHidden("d:\\");
         myFile.listDir.addAll(myFile.listFile);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
@@ -44,11 +58,6 @@ public class TableController extends TableView{
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
         tableFile.setItems(myFile.listDir);
         tableFile.getItems().addAll(myFile.listFile);
-
-        paneTree = new TreeView<File>(
-                new SimpleFileTreeItem(new File("C:\\")));
-        paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
-        anchorTree.getChildren().add(paneTree);
     }
 
 
