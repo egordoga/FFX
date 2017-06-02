@@ -21,18 +21,17 @@ import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 
+
 public class LVCF2 extends Application {
 
+
+    String path = "d:\\";
+    File file = new File(path);
     ListView<File> list = new ListView<File>();
-    ObservableList<String> data1 = FXCollections.observableArrayList(
-            "a.msg", "a1.msg", "b.txt", "c.pdf",
-            "d.html", "e.png", "f.zip",
-            "g.docx", "h.xlsx", "i.pptx");
+    ObservableList<File> data = initData(file);
 
-    ObservableList<File> data = initData();
+    ObservableList<File> initData(File file){
 
-    ObservableList<File> initData(){
-        File file = new File("f:\\");
         ObservableList<File> d = FXCollections.observableArrayList();
         File[] files = file.listFiles();
         for (File f : files) {
@@ -43,8 +42,9 @@ public class LVCF2 extends Application {
 
     @Override
     public void start(Stage stage) {
+
         VBox box = new VBox();
-        Scene scene = new Scene(box, 200, 200);
+        Scene scene = new Scene(box, 400, 600);
         stage.setScene(scene);
         stage.setTitle("ListViewSample");
         box.getChildren().addAll(list);
@@ -59,8 +59,29 @@ public class LVCF2 extends Application {
                 return new AttachmentListCell();
             }
         });
+        initial(data);
+        list.getSelectionModel().selectedItemProperty().addListener(
+                (e, a, b) -> {
+                    System.out.println(b);
+                    file = b;
+                    list.setCellFactory(new Callback<ListView<File>, ListCell<File>>() {
+
+                        @Override
+                        public ListCell<File> call(ListView<File> list) {
+                            return new AttachmentListCell();
+                        }
+                    });
+
+                });
+
 
         stage.show();
+    }
+
+    private void initial(ObservableList<File> data) {
+
+
+
     }
 
     public static class AttachmentListCell extends ListCell<File> {
@@ -73,8 +94,8 @@ public class LVCF2 extends Application {
             } else {
                 Image fxImage = jswingIconToImage(getJSwingIconFromFileSystem(item));
                 ImageView imageView = new ImageView(fxImage);
-                //setGraphic(imageView);
                 setText(item.getName());
+                setGraphic(imageView);
             }
         }
     }
