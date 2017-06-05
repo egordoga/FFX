@@ -39,6 +39,8 @@ public class TableController extends TableView{
         initializeTable();
 
         initializeTree();
+
+
     }
 
     private void initializeTree() {
