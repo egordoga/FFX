@@ -42,8 +42,9 @@ public class MyFile {
         return size;
     }
 
-    public void initFileListWithoutHidden(String path){
-        File file = new File(path);
+    public void initFileListWithoutHidden(File file){
+        listDir.clear();
+        listFile.clear();
         File[] files = file.listFiles();
 
         for (File f : files) {
@@ -53,33 +54,14 @@ public class MyFile {
                 listDir.add(new MyFile(sdf.format(f.lastModified()), "", f));
             }
         }
-        //list.addAll(listDir);
-        //list.addAll(listFile);
-
-
     }
 
-    public ObservableList<MyFile> getList(String path){
+    public ObservableList<MyFile> getList(File file){
         ObservableList<MyFile> list = FXCollections.observableArrayList();
-        initFileListWithoutHidden(path);
+        initFileListWithoutHidden(file);
         list.addAll(listDir);
         list.addAll(listFile);
         return list;
     }
 
-
-    /*private static Image jswingIconToImage(javax.swing.Icon jswingIcon) {
-        BufferedImage bufferedImage = new BufferedImage(jswingIcon.getIconWidth(), jswingIcon.getIconHeight(),
-                BufferedImage.TYPE_INT_ARGB);
-        jswingIcon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
-        return SwingFXUtils.toFXImage(bufferedImage, null);
-    }
-
-    private static javax.swing.Icon getJSwingIconFromFileSystem(File file) {
-
-        FileSystemView view = FileSystemView.getFileSystemView();
-        javax.swing.Icon icon = view.getSystemIcon(file);
-
-        return icon;
-    }*/
 }

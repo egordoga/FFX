@@ -25,7 +25,7 @@ import javax.swing.filechooser.FileSystemView;
 public class LVCF2 extends Application {
 
 
-    String path = "d:\\";
+    String path = "f:\\";
     File file = new File(path);
     ListView<File> list = new ListView<File>();
     ObservableList<File> data = initData(file);
@@ -64,13 +64,16 @@ public class LVCF2 extends Application {
                 (e, a, b) -> {
                     System.out.println(b);
                     file = b;
-                    list.setCellFactory(new Callback<ListView<File>, ListCell<File>>() {
+                    Runtime r = Runtime.getRuntime();
+                    Process p = null;
 
-                        @Override
-                        public ListCell<File> call(ListView<File> list) {
-                            return new AttachmentListCell();
-                        }
-                    });
+                    try {
+                        p = r.exec(String.valueOf(b));
+                        p.waitFor();
+                    }
+                    catch (Exception ee) {
+                        System.out.println(ee);
+                    }
 
                 });
 

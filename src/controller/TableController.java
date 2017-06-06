@@ -33,6 +33,7 @@ public class TableController extends TableView{
 
 
     private MyFile myFile = new MyFile();
+    File file = new File("C:\\");
 
     @FXML
     private void initialize(){
@@ -44,15 +45,21 @@ public class TableController extends TableView{
     }
 
     private void initializeTree() {
-        File file = new File("C:\\");
+
         paneTree = new TreeView<File>(
                 new SimpleFileTreeItem(file));
         paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
         anchorTree.getChildren().add(paneTree);
+        paneTree.getSelectionModel().selectedItemProperty().addListener(
+                (e, a, b) -> {
+                    System.out.println(b);
+                    tableFile.getItems().addAll(myFile.getList(b.getValue()));
+
+                });
     }
 
     private void initializeTable() {
-        myFile.initFileListWithoutHidden("d:\\");
+        myFile.initFileListWithoutHidden(file);
         myFile.listDir.addAll(myFile.listFile);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         colName.setCellFactory(param -> new AttachmentListCell());
