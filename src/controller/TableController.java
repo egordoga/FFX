@@ -12,6 +12,7 @@ import model.MyFile;
 import sample.SimpleFileTreeItem;
 
 import javax.swing.filechooser.FileSystemView;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -33,7 +34,7 @@ public class TableController extends TableView{
 
 
     private MyFile myFile = new MyFile();
-    File file = new File("C:\\");
+    File file = new File("d:\\");
 
     @FXML
     private void initialize(){
@@ -53,20 +54,45 @@ public class TableController extends TableView{
         paneTree.getSelectionModel().selectedItemProperty().addListener(
                 (e, a, b) -> {
                     System.out.println(b);
-                    tableFile.getItems().addAll(myFile.getList(b.getValue()));
+                    tableFile.setItems(myFile.getList(b.getValue()));
 
                 });
     }
 
     private void initializeTable() {
-        myFile.initFileListWithoutHidden(file);
-        myFile.listDir.addAll(myFile.listFile);
+        //myFile.initFileListWithoutHidden(file);
+        //myFile.listDir.addAll(myFile.listFile);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         colName.setCellFactory(param -> new AttachmentListCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile.setItems(myFile.listDir);
-        tableFile.getItems().addAll(myFile.listFile);
+        tableFile.setItems(myFile.getList(file));
+        //tableFile.getItems().addAll(myFile.listFile);
+
+
+        tableFile.setRowFactory( tv -> {
+            TableRow<MyFile> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    MyFile rowData = row.getItem();
+                    //Делайте, что требуется с элементом.
+                    System.out.println(rowData.getFi().getName());
+
+                    try {
+                        if (rowData.getFi().isFile()) {
+                            Desktop dt = Desktop.getDesktop();
+                            dt.open(rowData.getFi());
+                        } else {
+                            tableFile.setItems(myFile.getList(rowData.getFi()));
+                        }
+                    }
+                    catch (Exception ee) {
+                        System.out.println(ee);
+                    }
+                }
+            });
+            return row ;
+        });
     }
 
 

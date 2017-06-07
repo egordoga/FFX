@@ -1,5 +1,8 @@
 package other;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,10 +25,10 @@ import javafx.util.Callback;
 import javax.swing.filechooser.FileSystemView;
 
 
-public class LVCF2 extends Application {
+public class LVCF2 extends Application implements ActionListener {
 
 
-    String path = "f:\\";
+    String path = "d:\\";
     File file = new File(path);
     ListView<File> list = new ListView<File>();
     ObservableList<File> data = initData(file);
@@ -60,22 +63,38 @@ public class LVCF2 extends Application {
             }
         });
         initial(data);
-        list.getSelectionModel().selectedItemProperty().addListener(
-                (e, a, b) -> {
+        /*list.getSelectionModel().selectedItemProperty().addListener(new ActionEvent()
+
+                );
+               *//* (e, a, b) -> {
                     System.out.println(b);
                     file = b;
                     Runtime r = Runtime.getRuntime();
                     Process p = null;
 
                     try {
-                        p = r.exec(String.valueOf(b));
-                        p.waitFor();
+                        *//**//*p = r.exec(String.valueOf(b));
+                        p.waitFor();*//**//*
+
+                        Desktop dt = Desktop.getDesktop();
+                        dt.open(b);
                     }
                     catch (Exception ee) {
                         System.out.println(ee);
                     }
 
-                });
+                }*//*);*/
+
+      /*  list.setRowFactory( tv -> {
+            TableRow<MyType> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    MyType rowData = row.getItem();
+                    //Делайте, что требуется с элементом.
+                }
+            });
+            return row ;
+        });*/
 
 
         stage.show();
@@ -84,6 +103,11 @@ public class LVCF2 extends Application {
     private void initial(ObservableList<File> data) {
 
 
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
     }
 
