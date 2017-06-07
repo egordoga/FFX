@@ -2,8 +2,11 @@ package controller;
 
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.*;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,10 +34,13 @@ public class TableController extends TableView{
     TreeView<File> paneTree;
     @FXML
     AnchorPane anchorTree;
+    @FXML
+    Button btnUp;
 
 
     private MyFile myFile = new MyFile();
-    File file = new File("d:\\");
+    File dir = new File("f:\\");
+    File file;
 
     @FXML
     private void initialize(){
@@ -48,13 +54,14 @@ public class TableController extends TableView{
     private void initializeTree() {
 
         paneTree = new TreeView<File>(
-                new SimpleFileTreeItem(file));
+                new SimpleFileTreeItem(dir));
         paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
         anchorTree.getChildren().add(paneTree);
         paneTree.getSelectionModel().selectedItemProperty().addListener(
                 (e, a, b) -> {
                     System.out.println(b);
-                    tableFile.setItems(myFile.getList(b.getValue()));
+                    dir = b.getValue();
+                    tableFile.setItems(myFile.getList(dir));
 
                 });
     }
@@ -66,7 +73,7 @@ public class TableController extends TableView{
         colName.setCellFactory(param -> new AttachmentListCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile.setItems(myFile.getList(file));
+        tableFile.setItems(myFile.getList(dir));
         //tableFile.getItems().addAll(myFile.listFile);
 
 
@@ -75,15 +82,21 @@ public class TableController extends TableView{
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
                     MyFile rowData = row.getItem();
+
+                    if (rowData.getFi().isDirectory()) {
+                        dir = rowData.getFi();
+                    } else {
+                        file = rowData.getFi();
+                    }
                     //Делайте, что требуется с элементом.
                     System.out.println(rowData.getFi().getName());
 
                     try {
                         if (rowData.getFi().isFile()) {
                             Desktop dt = Desktop.getDesktop();
-                            dt.open(rowData.getFi());
+                            dt.open(file);
                         } else {
-                            tableFile.setItems(myFile.getList(rowData.getFi()));
+                            tableFile.setItems(myFile.getList(dir));
                         }
                     }
                     catch (Exception ee) {
@@ -93,6 +106,12 @@ public class TableController extends TableView{
             });
             return row ;
         });
+    }
+
+    @FXML
+    private void onClickBtnUp(){
+       if (dir.isDirectory()) dir = new File(dir.getParent());
+        tableFile.setItems(myFile.getList(dir));
     }
 
 

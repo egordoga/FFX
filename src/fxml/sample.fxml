@@ -38,7 +38,7 @@
       </MenuBar>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
         <items>
-          <Button mnemonicParsing="false" text="Button" />
+          <Button fx:id="btnUP" mnemonicParsing="false" onAction="#onClickBtnUp" text="Вверх" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.24749163879598662" VBox.vgrow="ALWAYS">
