@@ -3,44 +3,61 @@ package other;
 import java.io.File;
 /*from  w  w  w  .  j  ava2s .com*/
         import javafx.application.Application;
-        import javafx.event.ActionEvent;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
         import javafx.event.EventHandler;
-        import javafx.scene.Group;
+import javafx.scene.Cursor;
+import javafx.scene.Group;
         import javafx.scene.Scene;
-        import javafx.scene.control.Button;
-        import javafx.scene.control.ScrollPane;
-        import javafx.scene.control.TextArea;
-        import javafx.scene.control.TextAreaBuilder;
-        import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
         import javafx.scene.layout.VBoxBuilder;
         import javafx.stage.FileChooser;
         import javafx.stage.Stage;
+
+import static javafx.scene.control.ChoiceBoxBuilder.*;
 
 public class FileCh extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    @Override
-    public void start(final Stage primaryStage) {
-        Group root = new Group();
 
-        Button buttonLoad = new Button("Load");
-        buttonLoad.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent arg0) {
-                FileChooser fileChooser = new FileChooser();
-                FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt");
-                fileChooser.getExtensionFilters().add(extFilter);
-                File file = fileChooser.showOpenDialog(primaryStage);
-                System.out.println(file);
-            }
-        });
-        VBox vBox = VBoxBuilder.create()
-                .children(buttonLoad)
-                .build();
-        root.getChildren().add(vBox);
-        primaryStage.setScene(new Scene(root, 500, 400));
-        primaryStage.show();
+        ObservableList cursors = FXCollections.observableArrayList(
+                Cursor.DEFAULT,
+                Cursor.CROSSHAIR,
+                Cursor.WAIT,
+                Cursor.TEXT,
+                Cursor.HAND,
+                Cursor.MOVE,
+                Cursor.N_RESIZE,
+                Cursor.NE_RESIZE,
+                Cursor.E_RESIZE,
+                Cursor.SE_RESIZE,
+                Cursor.S_RESIZE,
+                Cursor.SW_RESIZE,
+                Cursor.W_RESIZE,
+                Cursor.NW_RESIZE,
+                Cursor.NONE
+        );
+        @Override
+        public void start(Stage stage) {
+            ChoiceBox choiceBoxRef = create()
+                    .items(cursors)
+                    .build();
+
+            VBox box = new VBox();
+            box.getChildren().add(choiceBoxRef);
+            final Scene scene = new Scene(box,300, 250);
+            scene.setFill(null);
+            stage.setScene(scene);
+            stage.show();
+            scene.cursorProperty().bind(choiceBoxRef.getSelectionModel()
+                    .selectedItemProperty());
+
+        }
+
+
     }
 
-}
+

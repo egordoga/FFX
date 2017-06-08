@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.*;
@@ -18,6 +19,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 
 
 public class TableController extends TableView{
@@ -36,6 +38,10 @@ public class TableController extends TableView{
     AnchorPane anchorTree;
     @FXML
     Button btnUp;
+    @FXML
+    ChoiceBox<File> cbDrive;
+    @FXML
+    ToolBar tb;
 
 
     private MyFile myFile = new MyFile();
@@ -48,7 +54,7 @@ public class TableController extends TableView{
 
         initializeTree();
 
-
+        initializeChoiceBox();
     }
 
     private void initializeTree() {
@@ -106,6 +112,16 @@ public class TableController extends TableView{
             });
             return row ;
         });
+    }
+
+    private void initializeChoiceBox(){
+        cbDrive = new ChoiceBox<>();
+        ObservableList<File> listDrive = FXCollections.observableArrayList();
+        File[] roots = File.listRoots();
+        Arrays.stream(roots).forEach(listDrive::add);
+        listDrive.forEach(System.out::println);
+        //tb.getCh
+        cbDrive.setItems(listDrive);
     }
 
     @FXML
