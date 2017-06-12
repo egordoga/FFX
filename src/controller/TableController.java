@@ -1,10 +1,9 @@
 package controller;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.*;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -42,46 +41,47 @@ public class TableController extends TableView{
     ChoiceBox<File> cbDrive;
     @FXML
     ToolBar tb;
+    @FXML
+    Tab tab;
 
-
+    String path = "f:\\";
     private MyFile myFile = new MyFile();
-    File dir = new File("f:\\");
+    File dir = new File(path);
     File file;
 
     @FXML
     private void initialize(){
         initializeTable();
 
-        initializeTree();
+        initializeTree(dir);
 
         initializeChoiceBox();
     }
 
-    private void initializeTree() {
+    private void initializeTree(File f) {
 
         paneTree = new TreeView<File>(
-                new SimpleFileTreeItem(dir));
+                new SimpleFileTreeItem(f));
         paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
+        paneTree.getRoot().setExpanded(true);
         anchorTree.getChildren().add(paneTree);
         paneTree.getSelectionModel().selectedItemProperty().addListener(
                 (e, a, b) -> {
                     System.out.println(b);
                     dir = b.getValue();
                     tableFile.setItems(myFile.getList(dir));
+                    tab.setText(dir.getName());
 
                 });
     }
 
     private void initializeTable() {
-        //myFile.initFileListWithoutHidden(file);
-        //myFile.listDir.addAll(myFile.listFile);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         colName.setCellFactory(param -> new AttachmentListCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
         tableFile.setItems(myFile.getList(dir));
-        //tableFile.getItems().addAll(myFile.listFile);
-
+        tab.setText(dir.getName());
 
         tableFile.setRowFactory( tv -> {
             TableRow<MyFile> row = new TableRow<>();
@@ -103,6 +103,7 @@ public class TableController extends TableView{
                             dt.open(file);
                         } else {
                             tableFile.setItems(myFile.getList(dir));
+                            tab.setText(dir.getName());
                         }
                     }
                     catch (Exception ee) {
@@ -115,19 +116,30 @@ public class TableController extends TableView{
     }
 
     private void initializeChoiceBox(){
-        cbDrive = new ChoiceBox<>();
         ObservableList<File> listDrive = FXCollections.observableArrayList();
         File[] roots = File.listRoots();
         Arrays.stream(roots).forEach(listDrive::add);
         listDrive.forEach(System.out::println);
-        //tb.getCh
         cbDrive.setItems(listDrive);
+        System.out.println();
+        System.out.println(cbDrive.getItems());
+
+        cbDrive.getSelectionModel().selectedItemProperty().addListener(
+                (ObservableValue<? extends File> ov, File oldVal, File newVal) ->{
+                    System.out.println(newVal);
+                    //dir = newVal;
+                    //paneTree = new TreeView<File>(new SimpleFileTreeItem(dir));
+                    //paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
+                    initializeTree(newVal);
+        }
+        );
     }
 
     @FXML
     private void onClickBtnUp(){
        if (dir.isDirectory()) dir = new File(dir.getParent());
         tableFile.setItems(myFile.getList(dir));
+        tab.setText(dir.getName());
     }
 
 
