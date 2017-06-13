@@ -23,8 +23,8 @@ import java.util.Arrays;
 
 public class TableController extends TableView{
 
-    @FXML
-    TableView<MyFile> tableFile;
+   /* @FXML
+    TableView<MyFile> tableFile;*/
     @FXML
     TableColumn<MyFile, File> colName;
     @FXML
@@ -41,17 +41,29 @@ public class TableController extends TableView{
     ChoiceBox<File> cbDrive;
     @FXML
     ToolBar tb;
+    /*@FXML
+    Tab tab;*/
     @FXML
-    Tab tab;
+    AnchorPane anchTab;
 
-    String path = "f:\\";
+
+    String path = "d:\\";
     private MyFile myFile = new MyFile();
     File dir = new File(path);
     File file;
 
+
+    Tab tab = new Tab();
+    TabPane tabPane = new TabPane();
+    TableView<MyFile> tableFile = addTable();
+
     @FXML
     private void initialize(){
+
+        initializeTabPane();
         initializeTable();
+
+        tab.setContent(tableFile);
 
         initializeTree(dir);
 
@@ -76,12 +88,9 @@ public class TableController extends TableView{
     }
 
     private void initializeTable() {
-        colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
-        colName.setCellFactory(param -> new AttachmentListCell());
-        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
-        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile.setItems(myFile.getList(dir));
-        tab.setText(dir.getName());
+
+
+
 
         tableFile.setRowFactory( tv -> {
             TableRow<MyFile> row = new TableRow<>();
@@ -115,6 +124,20 @@ public class TableController extends TableView{
         });
     }
 
+    private TableView<MyFile> addTable() {
+        TableView<MyFile> tableFile = new TableView<>();
+        TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
+        TableColumn<MyFile, String> colDateModif = new TableColumn<>("Дата");
+        TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
+        colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
+        colName.setCellFactory(param -> new AttachmentListCell());
+        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
+        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
+        tableFile.setItems(myFile.getList(dir));
+        tab.setText(dir.getName());
+        return tableFile;
+    }
+
     private void initializeChoiceBox(){
         ObservableList<File> listDrive = FXCollections.observableArrayList();
         File[] roots = File.listRoots();
@@ -133,6 +156,20 @@ public class TableController extends TableView{
                     initializeTree(newVal);
         }
         );
+    }
+
+    private void initializeTabPane(){
+
+        addTab(tabPane);
+        anchTab.getChildren().add(tabPane);
+    }
+
+    private void addTab(TabPane tabPane) {
+
+        Tab tab1 = new Tab(dir.getAbsolutePath());
+        tab.setText(dir.getAbsolutePath());
+        //ObservableList<Tab> tabs = FXCollections.observableArrayList();
+        tabPane.getTabs().addAll(tab, tab1);
     }
 
     @FXML
