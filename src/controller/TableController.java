@@ -55,11 +55,12 @@ public class TableController extends TableView{
 
     Tab tab = new Tab();
     TabPane tabPane = new TabPane();
-    TableView<MyFile> tableFile = addTable();
+    TableView<MyFile> tableFile;
 
     @FXML
     private void initialize(){
 
+        tableFile = addTable();
         initializeTabPane();
         initializeTable();
 
@@ -125,17 +126,18 @@ public class TableController extends TableView{
     }
 
     private TableView<MyFile> addTable() {
-        TableView<MyFile> tableFile = new TableView<>();
+        TableView<MyFile> tableFile1 = new TableView<>();
         TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
-        TableColumn<MyFile, String> colDateModif = new TableColumn<>("Дата");
+        TableColumn<MyFile, String> colDateModif = new TableColumn<>("dateModif");
         TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         colName.setCellFactory(param -> new AttachmentListCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile.setItems(myFile.getList(dir));
-        tab.setText(dir.getName());
-        return tableFile;
+        tableFile1.getColumns().addAll(colName, colDateModif, colSize);
+        tableFile1.setItems(myFile.getList(dir));
+        //tab.setText(dir.getName());
+        return tableFile1;
     }
 
     private void initializeChoiceBox(){
@@ -162,6 +164,7 @@ public class TableController extends TableView{
 
         addTab(tabPane);
         anchTab.getChildren().add(tabPane);
+        //anchTab.set
     }
 
     private void addTab(TabPane tabPane) {
