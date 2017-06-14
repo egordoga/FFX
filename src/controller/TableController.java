@@ -4,6 +4,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -128,8 +129,10 @@ public class TableController extends TableView{
     private TableView<MyFile> addTable() {
         TableView<MyFile> tableFile1 = new TableView<>();
         TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
+        colName.setMinWidth(200);
         TableColumn<MyFile, String> colDateModif = new TableColumn<>("dateModif");
         TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
+        tableFile1.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         colName.setCellFactory(param -> new AttachmentListCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
@@ -165,6 +168,10 @@ public class TableController extends TableView{
         addTab(tabPane);
         anchTab.getChildren().add(tabPane);
         //anchTab.set
+        AnchorPane.setBottomAnchor(tabPane, 5.0);
+        AnchorPane.setLeftAnchor(tabPane, 5.0);
+        AnchorPane.setRightAnchor(tabPane, 5.0);
+        AnchorPane.setTopAnchor(tabPane, 5.0);
     }
 
     private void addTab(TabPane tabPane) {
@@ -180,6 +187,13 @@ public class TableController extends TableView{
        if (dir.isDirectory()) dir = new File(dir.getParent());
         tableFile.setItems(myFile.getList(dir));
         tab.setText(dir.getName());
+    }
+
+    @FXML
+    private void addTab(ActionEvent event) {
+        Tab tab = new Tab(dir.getName());
+        tabPane.getTabs().add(tab);
+        tab.setContent(addTable());
     }
 
 
