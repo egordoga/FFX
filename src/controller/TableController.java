@@ -20,6 +20,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class TableController extends TableView{
@@ -50,6 +52,8 @@ public class TableController extends TableView{
 
     String path = "d:\\";
     private MyFile myFile = new MyFile();
+    private int idTab = 1;
+    private Map<Integer, File> mapTab = new HashMap<>();
     File dir = new File(path);
     File file;
 
@@ -70,6 +74,8 @@ public class TableController extends TableView{
         initializeTree(dir);
 
         initializeChoiceBox();
+
+        tabListener();
     }
 
     private void initializeTree(File f) {
@@ -94,7 +100,24 @@ public class TableController extends TableView{
 
 
 
-        tableFile.setRowFactory( tv -> {
+
+    }
+
+    private TableView<MyFile> addTable() {
+        TableView<MyFile> tableFile1 = new TableView<>();
+        TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
+        colName.setMinWidth(200);
+        TableColumn<MyFile, String> colDateModif = new TableColumn<>("dateModif");
+        TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
+        tableFile1.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
+        colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
+        colName.setCellFactory(param -> new AttachmentListCell());
+        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
+        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
+        tableFile1.getColumns().addAll(colName, colDateModif, colSize);
+        tableFile1.setItems(myFile.getList(dir));
+
+        tableFile1.setRowFactory( tv -> {
             TableRow<MyFile> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
@@ -124,22 +147,6 @@ public class TableController extends TableView{
             });
             return row ;
         });
-    }
-
-    private TableView<MyFile> addTable() {
-        TableView<MyFile> tableFile1 = new TableView<>();
-        TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
-        colName.setMinWidth(200);
-        TableColumn<MyFile, String> colDateModif = new TableColumn<>("dateModif");
-        TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
-        tableFile1.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
-        colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
-        colName.setCellFactory(param -> new AttachmentListCell());
-        colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
-        colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile1.getColumns().addAll(colName, colDateModif, colSize);
-        tableFile1.setItems(myFile.getList(dir));
-        //tab.setText(dir.getName());
         return tableFile1;
     }
 
@@ -165,7 +172,7 @@ public class TableController extends TableView{
 
     private void initializeTabPane(){
 
-        addTab(tabPane);
+        addTab(dir);
         anchTab.getChildren().add(tabPane);
         //anchTab.set
         AnchorPane.setBottomAnchor(tabPane, 5.0);
@@ -174,12 +181,13 @@ public class TableController extends TableView{
         AnchorPane.setTopAnchor(tabPane, 5.0);
     }
 
-    private void addTab(TabPane tabPane) {
+    private void addTab(File dir) {
 
         Tab tab1 = new Tab(dir.getAbsolutePath());
         tab.setText(dir.getAbsolutePath());
-        //ObservableList<Tab> tabs = FXCollections.observableArrayList();
-        tabPane.getTabs().addAll(tab, tab1);
+        idTab++;
+        mapTab.put(idTab, dir);
+        tabPane.getTabs().add(tab1);
     }
 
     @FXML
@@ -194,6 +202,12 @@ public class TableController extends TableView{
         Tab tab = new Tab(dir.getName());
         tabPane.getTabs().add(tab);
         tab.setContent(addTable());
+        System.out.println(tabPane.getSelectionModel().getSelectedItem());
+    }
+
+    private void tabListener(){
+       // tabPane.getSelectionModel().getSelectedItem().setText("HHHHHHH");
+
     }
 
 
