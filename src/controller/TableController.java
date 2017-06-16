@@ -53,7 +53,7 @@ public class TableController extends TableView{
     String path = "d:\\";
     private MyFile myFile = new MyFile();
     private int idTab = 1;
-    private Map<Integer, File> mapTab = new HashMap<>();
+    private Map<String, File> mapTab = new HashMap<>();
     File dir = new File(path);
     File file;
 
@@ -103,7 +103,7 @@ public class TableController extends TableView{
 
     }
 
-    private TableView<MyFile> addTable() {
+    private TableView<MyFile> addTable(File dir) {
         TableView<MyFile> tableFile1 = new TableView<>();
         TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
         colName.setMinWidth(200);
@@ -128,8 +128,6 @@ public class TableController extends TableView{
                     } else {
                         file = rowData.getFi();
                     }
-                    //Делайте, что требуется с элементом.
-                    System.out.println(rowData.getFi().getName());
 
                     try {
                         if (rowData.getFi().isFile()) {
@@ -156,39 +154,28 @@ public class TableController extends TableView{
         Arrays.stream(roots).forEach(listDrive::add);
         listDrive.forEach(System.out::println);
         cbDrive.setItems(listDrive);
-        System.out.println();
-        System.out.println(cbDrive.getItems());
-
         cbDrive.getSelectionModel().selectedItemProperty().addListener(
-                (ObservableValue<? extends File> ov, File oldVal, File newVal) ->{
-                    System.out.println(newVal);
-                    //dir = newVal;
-                    //paneTree = new TreeView<File>(new SimpleFileTreeItem(dir));
-                    //paneTree.setCellFactory(param -> new TreeController.AttachmentListCell());
-                    initializeTree(newVal);
-        }
-        );
+                (ObservableValue<? extends File> ov, File oldVal, File newVal) ->initializeTree(newVal));
     }
 
     private void initializeTabPane(){
 
         addTab(dir);
         anchTab.getChildren().add(tabPane);
-        //anchTab.set
         AnchorPane.setBottomAnchor(tabPane, 5.0);
         AnchorPane.setLeftAnchor(tabPane, 5.0);
         AnchorPane.setRightAnchor(tabPane, 5.0);
         AnchorPane.setTopAnchor(tabPane, 5.0);
     }
 
-    private void addTab(File dir) {
+    /*private void addTab(TabPane tabPane) {
 
         Tab tab1 = new Tab(dir.getAbsolutePath());
         tab.setText(dir.getAbsolutePath());
         idTab++;
         mapTab.put(idTab, dir);
         tabPane.getTabs().add(tab1);
-    }
+    }*/
 
     @FXML
     private void onClickBtnUp(){
@@ -198,8 +185,11 @@ public class TableController extends TableView{
     }
 
     @FXML
-    private void addTab(ActionEvent event) {
+    private void addTab(File dir) {
+
         Tab tab = new Tab(dir.getName());
+        tab.setId(String.valueOf(tab.hashCode()));
+        mapTab.put(tab.getId(), dir);
         tabPane.getTabs().add(tab);
         tab.setContent(addTable());
         System.out.println(tabPane.getSelectionModel().getSelectedItem());
