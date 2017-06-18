@@ -12,13 +12,11 @@ import java.io.File;
 import static controller.TableController.getJSwingIconFromFileSystem;
 import static controller.TableController.jswingIconToImage;
 
-/**
- * Created by Игорь on 31.05.2017.
- */
-public class TreeController extends TreeView {
 
-    @FXML
-    TreeView<File> paneTree;
+class TreeController extends TreeView {
+
+    /*@FXML
+    TreeView<File> paneTree;*/
 
 
     public static class AttachmentListCell extends TreeCell<File> {

@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import model.MyFile;
+import model.MyTab;
 import sample.SimpleFileTreeItem;
 
 import javax.swing.filechooser.FileSystemView;
@@ -65,17 +66,19 @@ public class TableController extends TableView{
     @FXML
     private void initialize(){
 
-        tableFile = addTable();
-        initializeTabPane();
-        initializeTable();
+        addTab(dir);
 
-        tab.setContent(tableFile);
+        //tableFile = addTable(dir);
+        initializeTabPane();
+        //initializeTable();
+
+        //tab.setContent(tableFile);
 
         initializeTree(dir);
 
         initializeChoiceBox();
 
-        tabListener();
+        //tabListener();
     }
 
     private void initializeTree(File f) {
@@ -87,10 +90,14 @@ public class TableController extends TableView{
         anchorTree.getChildren().add(paneTree);
         paneTree.getSelectionModel().selectedItemProperty().addListener(
                 (e, a, b) -> {
-                    System.out.println(b);
                     dir = b.getValue();
-                    tableFile.setItems(myFile.getList(dir));
-                    tab.setText(dir.getName());
+                    //tableFile.setItems(myFile.getList(dir));
+                    TableView<MyFile> tv = (TableView<MyFile>) tabPane.getSelectionModel().getSelectedItem().getContent();
+                    tv.setItems(myFile.getList(b.getValue()));
+                    if (!(f.getParent() == null)) {
+                        tab.setText(dir.getName());
+                    } else {
+                    }
 
                 });
     }
@@ -111,11 +118,15 @@ public class TableController extends TableView{
         TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
         tableFile1.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
-        colName.setCellFactory(param -> new AttachmentListCell());
+        colName.setCellFactory(param -> new AttachmentTableCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
         tableFile1.getColumns().addAll(colName, colDateModif, colSize);
         tableFile1.setItems(myFile.getList(dir));
+
+        System.out.println(dir.getParent() + "kkkkkkkk");
+
+        File[] d = {dir};
 
         tableFile1.setRowFactory( tv -> {
             TableRow<MyFile> row = new TableRow<>();
@@ -124,7 +135,7 @@ public class TableController extends TableView{
                     MyFile rowData = row.getItem();
 
                     if (rowData.getFi().isDirectory()) {
-                        dir = rowData.getFi();
+                        d[0] = rowData.getFi();
                     } else {
                         file = rowData.getFi();
                     }
@@ -134,8 +145,8 @@ public class TableController extends TableView{
                             Desktop dt = Desktop.getDesktop();
                             dt.open(file);
                         } else {
-                            tableFile.setItems(myFile.getList(dir));
-                            tab.setText(dir.getName());
+                            tableFile.setItems(myFile.getList(d[0]));
+                            tab.setText(d[0].getName());
                         }
                     }
                     catch (Exception ee) {
@@ -145,6 +156,10 @@ public class TableController extends TableView{
             });
             return row ;
         });
+
+        dir = d[0];
+        System.out.println(dir.getParent() + "llllll");
+
         return tableFile1;
     }
 
@@ -152,7 +167,7 @@ public class TableController extends TableView{
         ObservableList<File> listDrive = FXCollections.observableArrayList();
         File[] roots = File.listRoots();
         Arrays.stream(roots).forEach(listDrive::add);
-        listDrive.forEach(System.out::println);
+        //listDrive.forEach(System.out::println);
         cbDrive.setItems(listDrive);
         cbDrive.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends File> ov, File oldVal, File newVal) ->initializeTree(newVal));
@@ -184,24 +199,45 @@ public class TableController extends TableView{
         tab.setText(dir.getName());
     }
 
-    @FXML
-    private void addTab(File dir) {
+   /* @FXML
+    public void addTab(File dir) {
 
         Tab tab = new Tab(dir.getName());
         tab.setId(String.valueOf(tab.hashCode()));
         mapTab.put(tab.getId(), dir);
+        tab.setContent(addTable(dir));
         tabPane.getTabs().add(tab);
-        tab.setContent(addTable());
         System.out.println(tabPane.getSelectionModel().getSelectedItem());
-    }
+    }*/
 
     private void tabListener(){
        // tabPane.getSelectionModel().getSelectedItem().setText("HHHHHHH");
 
     }
 
+    @FXML
+    private void addTab(File dir) {
+        Tab tab = new Tab();
+        MyTab myTab = new MyTab(tab, dir);
+        if (dir.getParent() == null){
+            tab.setText(dir.getAbsolutePath());
+        } else {
+            tab.setText(dir.getName());
+        }
+        tab.setId(String.valueOf(tab.hashCode()));
+        mapTab.put(tab.getId(), dir);
+        tab.setContent(addTable(dir));
+        tabPane.getTabs().add(tab);
 
-    public static class AttachmentListCell extends TableCell<MyFile, File> {
+        //return myTab;
+    }
+
+    public void clickAddTab(ActionEvent actionEvent) {
+       addTab(mapTab.get(tabPane.getSelectionModel().getSelectedItem().getId()));
+    }
+
+
+    public static class AttachmentTableCell extends TableCell<MyFile, File> {
         @Override
         public void updateItem(File item, boolean empty) {
             super.updateItem((item), empty);

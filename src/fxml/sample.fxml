@@ -37,7 +37,7 @@
         <items>
             <ChoiceBox fx:id="cbDrive" prefHeight="25.0" prefWidth="68.0" />
           <Button fx:id="btnUP" mnemonicParsing="false" onAction="#onClickBtnUp" text="Вверх" />
-            <Button fx:id="btnAddTab" mnemonicParsing="false" onAction="#addTab" text="+Tab" />
+            <Button fx:id="btnAddTab" mnemonicParsing="false" onAction="#clickAddTab" text="+Tab" />
         </items>
       </ToolBar>
       <SplitPane dividerPositions="0.24749163879598662" VBox.vgrow="ALWAYS">
