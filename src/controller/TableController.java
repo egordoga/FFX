@@ -90,14 +90,11 @@ public class TableController extends TableView{
         anchorTree.getChildren().add(paneTree);
         paneTree.getSelectionModel().selectedItemProperty().addListener(
                 (e, a, b) -> {
-                    dir = b.getValue();
+                    //dir = b.getValue();
                     //tableFile.setItems(myFile.getList(dir));
                     TableView<MyFile> tv = (TableView<MyFile>) tabPane.getSelectionModel().getSelectedItem().getContent();
                     tv.setItems(myFile.getList(b.getValue()));
-                    if (!(f.getParent() == null)) {
-                        tab.setText(dir.getName());
-                    } else {
-                    }
+                    tabName(b.getValue());
 
                 });
     }
@@ -112,9 +109,9 @@ public class TableController extends TableView{
 
     private TableView<MyFile> addTable(File dir) {
         TableView<MyFile> tableFile1 = new TableView<>();
-        TableColumn<MyFile, File> colName = new TableColumn<>("Наименование");
+        TableColumn<MyFile, File> colName = new TableColumn<>("Имя");
         colName.setMinWidth(200);
-        TableColumn<MyFile, String> colDateModif = new TableColumn<>("dateModif");
+        TableColumn<MyFile, String> colDateModif = new TableColumn<>("Дата");
         TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
         tableFile1.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
@@ -145,8 +142,10 @@ public class TableController extends TableView{
                             Desktop dt = Desktop.getDesktop();
                             dt.open(file);
                         } else {
-                            tableFile.setItems(myFile.getList(d[0]));
-                            tab.setText(d[0].getName());
+                            TableView<MyFile> tvMf = (TableView<MyFile>) tabPane.getSelectionModel().getSelectedItem().getContent();
+                            tvMf.setItems(myFile.getList(d[0]));
+                            tabName(d[0]);
+                            mapTab.put(tabPane.getSelectionModel().getSelectedItem().getId(), d[0]);
                         }
                     }
                     catch (Exception ee) {
@@ -169,13 +168,14 @@ public class TableController extends TableView{
         Arrays.stream(roots).forEach(listDrive::add);
         //listDrive.forEach(System.out::println);
         cbDrive.setItems(listDrive);
+        cbDrive.setAccessibleText(roots[0].getAbsolutePath());
         cbDrive.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends File> ov, File oldVal, File newVal) ->initializeTree(newVal));
     }
 
     private void initializeTabPane(){
 
-        addTab(dir);
+        //addTab(dir);
         anchTab.getChildren().add(tabPane);
         AnchorPane.setBottomAnchor(tabPane, 5.0);
         AnchorPane.setLeftAnchor(tabPane, 5.0);
@@ -194,10 +194,31 @@ public class TableController extends TableView{
 
     @FXML
     private void onClickBtnUp(){
-       if (dir.isDirectory()) dir = new File(dir.getParent());
-        tableFile.setItems(myFile.getList(dir));
-        tab.setText(dir.getName());
+
+       File dir = mapTab.get(tabPane.getSelectionModel().getSelectedItem().getId());
+       if (dir.isDirectory()){
+          if (!(dir.getParent() == null)) {
+             // dir = new File(dir.getParent());
+              dir = dir.getParentFile();
+              TableView<MyFile> tv = (TableView<MyFile>) tabPane.getSelectionModel().getSelectedItem().getContent();
+              tv.setItems(myFile.getList(dir));
+              //addTable(dir);
+              tabName(dir);
+              mapTab.put(tabPane.getSelectionModel().getSelectedItem().getId(), dir);
+          }
+       }
     }
+
+    private void tabName(File dir) {
+        //File dir = mapTab.get(tabPane.getSelectionModel().getSelectedItem().getId());
+        if (!(dir.getParent() == null)) {
+            tabPane.getSelectionModel().getSelectedItem().setText(dir.getName());
+        } else {
+            tabPane.getSelectionModel().getSelectedItem().setText(dir.getAbsolutePath());
+        }
+    }
+
+
 
    /* @FXML
     public void addTab(File dir) {
@@ -208,6 +229,12 @@ public class TableController extends TableView{
         tab.setContent(addTable(dir));
         tabPane.getTabs().add(tab);
         System.out.println(tabPane.getSelectionModel().getSelectedItem());
+
+         File prev = mapTab.get(tabPane.getSelectionModel().getSelectedItem().getId());
+       File next = prev.getParentFile();
+        TableView<MyFile> tv = (TableView<MyFile>) tabPane.getSelectionModel().getSelectedItem().getContent();
+        tv.setItems(myFile.getList(next));
+        mapTab.put(tabPane.getSelectionModel().getSelectedItem().getId(), next);
     }*/
 
     private void tabListener(){
