@@ -64,6 +64,9 @@ public class TableController extends TableView {
                 (e, a, b) -> {
                     TableView<MyFile> tv = (TableView<MyFile>) tabPane.getSelectionModel().getSelectedItem().getContent();
                     tv.setItems(myFile.getList(b.getValue()));
+                    Tab tab = tabPane.getSelectionModel().getSelectedItem();
+                    tab.setId(String.valueOf(tab.hashCode()));
+                    mapTab.put(tab.getId(), b.getValue());
                     tabName(b.getValue());
 
                 });
@@ -71,21 +74,24 @@ public class TableController extends TableView {
 
 
     private TableView<MyFile> addTable(File dir) {
-        TableView<MyFile> tableFile1 = new TableView<>();
+        TableView<MyFile> tableFile = new TableView<>();
         TableColumn<MyFile, File> colName = new TableColumn<>("Имя");
         colName.setMinWidth(200);
         TableColumn<MyFile, String> colDateModif = new TableColumn<>("Дата");
         TableColumn<MyFile, String> colSize = new TableColumn<>("Размер");
-        tableFile1.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
+        tableFile.setColumnResizePolicy(CONSTRAINED_RESIZE_POLICY);
         colName.setCellValueFactory(new PropertyValueFactory<MyFile, File>("fi"));
         colName.setCellFactory(param -> new AttachmentTableCell());
         colDateModif.setCellValueFactory(new PropertyValueFactory<MyFile, String>("dateModif"));
         colSize.setCellValueFactory(new PropertyValueFactory<MyFile, String>("size"));
-        tableFile1.getColumns().addAll(colName, colDateModif, colSize);
-        tableFile1.setItems(myFile.getList(dir));
+        tableFile.getColumns().addAll(colName, colDateModif, colSize);
+        tableFile.setItems(myFile.getList(dir));
+
+
+
 
         File[] d = {dir};
-        tableFile1.setRowFactory(tv -> {
+        tableFile.setRowFactory(tv -> {
             TableRow<MyFile> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
@@ -115,8 +121,8 @@ public class TableController extends TableView {
             return row;
         });
 
-        //dir = d[0];
-        return tableFile1;
+
+        return tableFile;
     }
 
     private void initializeChoiceBox() {
@@ -151,7 +157,6 @@ public class TableController extends TableView {
                 mapTab.put(tabPane.getSelectionModel().getSelectedItem().getId(), dir);
             }
         }
-        System.out.println(mapTab.size());
     }
 
     private void tabName(File dir) {
