@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import model.MyFile;
 import sample.SimpleFileTreeItem;
@@ -120,6 +121,21 @@ public class TableController extends TableView {
             });
             return row;
         });
+
+
+
+   /*     tableFile.setOnDragDetected(event -> {
+    *//* drag was detected, start a drag-and-drop gesture*//*
+    *//* allow any transfer mode *//*
+            Dragboard db = tableFile.startDragAndDrop(TransferMode.COPY_OR_MOVE);
+
+    *//* Put a string on a dragboard *//*
+           *//* ClipboardContent content = new ClipboardContent();
+            content.putString(tableFile.getText());*//*
+            db.setContent(tableFile.getSelectionModel().getSelectedItems().g);
+
+            event.consume();
+        });*/
 
 
         return tableFile;
