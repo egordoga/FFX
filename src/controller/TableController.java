@@ -88,7 +88,7 @@ public class TableController extends TableView {
         tableFile.getColumns().addAll(colName, colDateModif, colSize);
         tableFile.setItems(myFile.getList(dir));
 
-
+        initializeListeners(tableFile);
 
 
         File[] d = {dir};
@@ -122,7 +122,7 @@ public class TableController extends TableView {
             return row;
         });
 
-
+            //tableFile.getSelectionModel().
 
    /*     tableFile.setOnDragDetected(event -> {
     *//* drag was detected, start a drag-and-drop gesture*//*
@@ -139,6 +139,70 @@ public class TableController extends TableView {
 
 
         return tableFile;
+    }
+
+
+
+    private void initializeListeners(TableView<MyFile> tableView) {
+        // drag from left to right
+        tableView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (tableView.getSelectionModel().getSelectedItem() == null) {
+                    return;
+                }
+
+                Dragboard dragBoard = tableView.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(tableView.getSelectionModel().getSelectedItem().getFi().getAbsolutePath());
+                dragBoard.setContent(content);
+            }
+        });
+
+       /* tabPane.getOnMouseDragOver().setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent dragEvent) {
+                dragEvent.acceptTransferModes(TransferMode.MOVE);
+            }
+        });*/
+
+        tabPane.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent dragEvent) {
+                String path = dragEvent.getDragboard().getString();
+                System.out.println(path);
+                dragEvent.setDropCompleted(true);
+            }
+        });
+        /*// drag from right to left
+        rightListView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Dragboard dragBoard = rightListView.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent content = new ClipboardContent();
+                content.putString(rightListView.getSelectionModel().getSelectedItem()
+                        .getName());
+                dragBoard.setContent(content);
+            }
+        });
+
+        tableView.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent dragEvent) {
+                dragEvent.acceptTransferModes(TransferMode.MOVE);
+            }
+        });
+
+        tableView.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent dragEvent) {
+                String player = dragEvent.getDragboard().getString();
+                tableView.getItems().remove(new Student(player));
+
+                rightList.remove(new Student(player));
+                dragEvent.setDropCompleted(true);
+            }
+        });*/
     }
 
     private void initializeChoiceBox() {
@@ -196,9 +260,21 @@ public class TableController extends TableView {
         mapTab.put(tab.getId(), dir);
         tab.setContent(addTable(dir));
         tabPane.getTabs().add(tab);
-        tab.setOnClosed(event ->
-        mapTab.remove(tab.getId())
-        );
+        tab.setOnClosed(event -> mapTab.remove(tab.getId()));
+
+        /*tab.a.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent dragEvent) {
+                String path = dragEvent.getDragboard().getString();
+                System.out.println(path);
+                dragEvent.setDropCompleted(true);
+            }
+        });*/
+        //tab
+
+
+
+
     }
 
     public void clickAddTab(ActionEvent actionEvent) {
