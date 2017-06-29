@@ -31,7 +31,7 @@ public class Main2 extends Application {
     public void start(Stage primaryStage) {
         Group root = new Group();
         Scene scene = new Scene(root, 300, 250);
-        root.getChildren().addAll(source,target);
+        root.getChildren().addAll(source,target, target1);
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {

@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import model.MyFile;
+import other.tabNew.DraggableTab;
 import sample.SimpleFileTreeItem;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
@@ -74,7 +75,7 @@ public class TableController extends TableView {
     }
 
 
-    private TableView<MyFile> addTable(File dir) {
+    public TableView<MyFile> addTable(File dir) {
         TableView<MyFile> tableFile = new TableView<>();
         TableColumn<MyFile, File> colName = new TableColumn<>("Имя");
         colName.setMinWidth(200);
@@ -159,12 +160,12 @@ public class TableController extends TableView {
             }
         });
 
-       /* tabPane.getOnMouseDragOver().setOnDragOver(new EventHandler<DragEvent>() {
+        tabPane.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent dragEvent) {
                 dragEvent.acceptTransferModes(TransferMode.MOVE);
             }
-        });*/
+        });
 
         tabPane.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
@@ -250,12 +251,13 @@ public class TableController extends TableView {
 
     @FXML
     private void addTab(File dir) {
-        Tab tab = new Tab();
+        String name;
         if (dir.getParent() == null) {
-            tab.setText(dir.getAbsolutePath());
+            name = dir.getAbsolutePath();
         } else {
-            tab.setText(dir.getName());
+            name = dir.getName();
         }
+        DraggableTab tab = new DraggableTab(name);
         tab.setId(String.valueOf(tab.hashCode()));
         mapTab.put(tab.getId(), dir);
         tab.setContent(addTable(dir));
